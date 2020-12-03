@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Post from './Post'
-import { db, auth } from './firebase'
+import { db, auth, storage } from './firebase'
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import { Button, Input } from '@material-ui/core';
@@ -42,6 +42,17 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+   
+      db.collection('posts').onSnapshot(snapshot => {
+        setPosts(snapshot.docs.map(doc => ({
+
+          id: doc.id,
+          post: doc.data()
+        })));
+      })
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         //user has logged in...
@@ -59,15 +70,11 @@ function App() {
     }
   }, [user, username]); 
 
-  useEffect(() => {
-      db?.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-        setPosts(snapshot.docs.map(doc => doc.data({
-          id: doc.id,
-          post: doc.data()
-        })));
-      })
-  }, []);
+  // let posts = [{ id: "11222", caption:"Anandfd", imageUrl:"asdfgh"},{ id: "11222", caption:"Anandfd", imageUrl:"asdfgh"}, ]
 
+
+  
+ 
   const signUp = (event) => {
     event.preventDefault();
 
@@ -167,6 +174,7 @@ function App() {
           alt=''  
         />
         {user ? (
+          
           <Button onClick = {() => auth.signOut()}>Logout</Button>  
         ): (
           <div className = 'app_loginContainer'>
@@ -179,9 +187,11 @@ function App() {
       <div className='app_posts'>
         <div className='app_postsLeft'>
         {
-          posts.map(({id ,post}) => (
+          posts?.map(({id ,post}) => (
             <Post key={id} postId={id} user={user} username ={post.username} caption={post.caption} imageUrl={post.imageUrl} />
           ))
+          // <Post username="anand" caption="Wow, it did it" imageUrl="sdvf" />
+
         }
         </div>
         <div className='app_postsRight'>

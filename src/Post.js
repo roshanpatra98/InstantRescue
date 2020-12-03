@@ -26,7 +26,7 @@ function Post({postId, user, username, caption, imageUrl}) {
 
     const postComment = (event) => {
         event.preventDefault();
-
+        
         db.collection("posts").doc(postId).collection('comments').add({
             text: comment,
             username: user.displayName,
@@ -65,7 +65,7 @@ function Post({postId, user, username, caption, imageUrl}) {
                     type = 'text'
                     placeholder = 'Add a comment..'
                     value = {comment}
-                    onChange = {(e) => setComments(e.target.value)}
+                    onChange = {(e) => setComment(e.target.value)}
                 />
                 <button
                     className="post_buttom"

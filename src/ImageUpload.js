@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button } from '@material-ui/core';
+import { Button, capitalize } from '@material-ui/core';
 import firebase from 'firebase';
 import { storage, db } from './firebase';
 import './ImageUpload.css';
@@ -29,13 +29,14 @@ function ImageUpload({username}) {
             },
             (error) => {
                 //Error function ...
-                console.log(error);
+                console.log("ABC:::55000",error);
                 alert(error.message);
             },
             () => {
                 //complete function ...
+                { console.log("ABC:;sucees passeing")}
                 storage
-                    .ref('images')
+                    .ref('image')
                     .child(image.name)
                     .getDownloadURL()
                     .then(url => {
@@ -44,9 +45,9 @@ function ImageUpload({username}) {
                             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                             caption: caption,
                             imageUrl: url,
-                            username: username
+                            username: usernamex
                         });
-
+                        console.log("ABC::: post saved", caption, url, username)
                         setProgress(0);
                         setCaption("");
                         setImage(null);
